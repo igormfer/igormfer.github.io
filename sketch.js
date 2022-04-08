@@ -1,11 +1,11 @@
 // Ball variables
 let xBall = 250;
 let yBall = 200;
-let diameterBall = 15;
+let diameterBall = 25;
 let radius = diameterBall / 2;
 
 // Ball Speed Variables
-let speedXBall = 3;
+let speedXBall = 6;
 let speedYBall = 6;
 
 // My rect variables
@@ -18,6 +18,11 @@ let widthRacket = 15;
 let xOpponentRect = 480 
 let yOpponentRect = 150
 let moveYOpponentRect;
+
+// Scoreboard variables
+let opponentPoints = 0;
+let myPoints = 0;
+
 
 
 function setup() {
@@ -32,10 +37,14 @@ function draw() {
   validateEdgeColision();
   showRacket(xmyRacket,ymyRacket);
   movemyRacket();
-//  checkColisionmyRacket();
-  myRectCollide();
+  //checkColisionmyRacket();
   showRacket(xOpponentRect,yOpponentRect);
   moveOpponentRacket();
+  rectCollide(xmyRacket,ymyRacket);
+  rectCollide(xOpponentRect,yOpponentRect);
+  showScoreboard();
+  pointsCount();
+
 }
 
 
@@ -85,7 +94,7 @@ function movemyRacket(){
 
 // check colision between my racket and ball
 
-//----> Falta completar o resto da aula. A partir do minuto 4 mais ou menos.
+
 function checkColisionmyRacket(){
   if (xBall - radius < xmyRacket + widthRacket && yBall - radius < ymyRacket + heightRacket){
        speedXBall *= -1
@@ -96,9 +105,9 @@ function checkColisionmyRacket(){
 // This function returns True or False for
 // colision between circle and Rect
 
-function myRectCollide(){
+function rectCollide(x,y){
   collided = 
-  collideRectCircle(xmyRacket, ymyRacket,widthRacket,heightRacket, xBall, yBall, radius)
+  collideRectCircle(x,y,widthRacket,heightRacket, xBall, yBall, radius)
   
   if(collided){
     speedXBall *= -1
@@ -111,6 +120,28 @@ function moveOpponentRacket(){
   
   }
 
+// show scoreboard count
+function showScoreboard(){
+  stroke(255)
+  textAlign(CENTER);
+  fill(color(217,236,67))
+  rect(120,10,40,20)
+  rect(350,10,40,20)
+  fill(255);
+  textSize(16);
+  text(opponentPoints,140,25);
+  text(myPoints, 370,25);
+}
+
+// function of point counting
+function pointsCount(){
+  if (xBall + radius > 499){
+    opponentPoints += 1
+  }
+    if (xBall - radius < 1){
+    myPoints += 1
+  }
+}
 
 
 
