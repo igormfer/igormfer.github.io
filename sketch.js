@@ -5,8 +5,8 @@ let diameterBall = 25;
 let radius = diameterBall / 2;
 
 // Ball Speed Variables
-let speedXBall = 6;
-let speedYBall = 6;
+let speedXBall = 7;
+let speedYBall = 8;
 
 // My rect variables
 let xmyRacket = 5;
@@ -14,7 +14,7 @@ let heightRacket = 100;
 let ymyRacket = 150
 let widthRacket = 15;
 
-//Openent rect variables
+// Openent rect variables
 let xOpponentRect = 480 
 let yOpponentRect = 150
 let moveYOpponentRect;
@@ -23,10 +23,26 @@ let moveYOpponentRect;
 let opponentPoints = 0;
 let myPoints = 0;
 
+// Game sounds variable
+let raquetada;
+let trilha;
+let ponto;
 
+// Chance of the opponent make mistake variable
+// Ainda não está funcional. Preciso ajustar.
+let mistakeChance = 0;
+
+
+function preload(){
+  trilha = loadSound("trilha.mp3")
+  ponto = loadSound("ponto.mp3")
+  raquetada = loadSound("raquetada.mp3")
+  
+}
 
 function setup() {
   createCanvas(500, 400);
+  trilha.loop();
 }
 
 // Most important function of the game
@@ -65,7 +81,7 @@ function speedBall() {
 // Function for check the ball hits the edge
 function validateEdgeColision() {
   //* width is the right side limit or X
-  //*  xBall + radius > width is the outside of the ball 
+  //*  xBall + radius is the outside of the ball 
   if (xBall + radius > width || xBall - radius < 0){
     speedXBall *= -1;
   }
@@ -111,12 +127,14 @@ function rectCollide(x,y){
   
   if(collided){
     speedXBall *= -1
+    raquetada.play();
   }
-}
+  }
 
 function moveOpponentRacket(){
-  moveYOpponentRect = yBall - yOpponentRect - widthRacket / 2 - 70
-  yOpponentRect += moveYOpponentRect
+  moveYOpponentRect = yBall - yOpponentRect - widthRacket / 2
+  yOpponentRect += moveYOpponentRect // + mistakeChance;
+  //calcMistakeChance();
   
   }
 
@@ -124,7 +142,7 @@ function moveOpponentRacket(){
 function showScoreboard(){
   stroke(255)
   textAlign(CENTER);
-  fill(color(217,236,67))
+  fill(color(255, 153, 51))
   rect(120,10,40,20)
   rect(350,10,40,20)
   fill(255);
@@ -137,12 +155,27 @@ function showScoreboard(){
 function pointsCount(){
   if (xBall + radius > 499){
     opponentPoints += 1
+    ponto.play();
   }
     if (xBall - radius < 1){
     myPoints += 1
-  }
+    ponto.play();
+    }
 }
 
 
+// Preciso corrigir essa função para conseguir fazer pontos
+function calcMistakeChance(){
+  if (opponentPoints >= myPoints){
+    mistakeChance += -1
+  if (mistakeChance >= 39) {
+    mistakeChance = 40
+  }
 
-
+  } else {
+    mistakeChance -=1
+    if (mistakeChance <= 35){
+      mistakeChance = 35
+    }
+  }
+}
